@@ -1,74 +1,85 @@
 name: Render reel
 
-# Triggered three ways:
-#  - repository_dispatch (event_type: render-reel) -> from n8n via the GitHub API
-#  - workflow_dispatch -> manual run from the Actions tab (paste a JSON payload)
-#  - push to render/** or payload.example.json -> renders the example (smoke test)
 on:
   repository_dispatch:
     types: [render-reel]
   workflow_dispatch:
     inputs:
       payload:
-        description: "Reel JSON payload (leave blank to render the example)"
+        description: "Reel payload JSON (optional; uses payload.example.json if blank)"
         required: false
         default: ""
   push:
-    paths:
-      - "render/**"
-      - "payload.example.json"
+    branches: [main]
+    paths: ["render/**", "project/**", ".github/workflows/render.yml", "payload.example.json"]
+
+concurrency:
+  group: render-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   render:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
 
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-          cache: pip
 
-      - name: Install ffmpeg
+      - name: System deps (ffmpeg)
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
 
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-          python -m playwright install --with-deps chromium
+      - name: Python deps
+        run: pip install -r requirements.txt
 
       - name: Resolve payload
+        id: payload
         env:
-          DISPATCH_PAYLOAD: ${{ toJSON(github.event.client_payload) }}
+          CLIENT_PAYLOAD: ${{ toJson(github.event.client_payload) }}
           INPUT_PAYLOAD: ${{ github.event.inputs.payload }}
         run: |
           python - <<'PY'
           import os, json
-          dp = (os.environ.get("DISPATCH_PAYLOAD") or "").strip()
-          ip = (os.environ.get("INPUT_PAYLOAD") or "").strip()
-          payload = None
-          if dp and dp not in ("null", "{}", ""):
-              payload = json.loads(dp)
+          cp = os.environ.get("CLIENT_PAYLOAD", "").strip()
+          ip = os.environ.get("INPUT_PAYLOAD", "").strip()
+          data = None
+          if cp and cp not in ("null", "{}"):
+              data = json.loads(cp)
           elif ip:
-              payload = json.loads(ip)
+              data = json.loads(ip)
           else:
-              payload = json.load(open("payload.example.json"))
-          json.dump(payload, open("_payload.json", "w"))
-          print("resolved payload — scenes:", len(payload.get("scenes", [])))
+              data = json.load(open("payload.example.json"))
+          json.dump(data, open("payload.json", "w"))
+          print("scenes:", len(data.get("scenes", [])), "title:", (data.get("meta") or {}).get("title"))
           PY
 
+      - name: Install HyperFrames + Chrome
+        run: |
+          npx --yes hyperframes@0.9.81 browser ensure
+
       - name: Build reel
-        run: python render/build.py --payload _payload.json --out reel.mp4
+        env:
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+          ELEVENLABS_VOICE_ID: ${{ secrets.ELEVENLABS_VOICE_ID }}
+          ELEVENLABS_MODEL: ${{ secrets.ELEVENLABS_MODEL }}
+        run: |
+          python render/build.py --payload payload.json --out reel.mp4
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: reel-${{ github.run_id }}
+          name: reel
           path: reel.mp4
-          retention-days: 7
+          if-no-files-found: error
 
-      - name: Deliver to n8n
+      - name: Deliver to n8n (no-ops if N8N_CALLBACK_URL secret is unset)
         env:
           N8N_CALLBACK_URL: ${{ secrets.N8N_CALLBACK_URL }}
-        run: python render/notify.py --file reel.mp4 --payload _payload.json
+        run: |
+          python render/notify.py --file reel.mp4 --payload payload.json
