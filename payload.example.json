@@ -1,0 +1,64 @@
+{
+  "brand": "YASIR",
+  "accent": "#34E3C8",
+  "warn": "#F4746B",
+  "voice": "en-US-AndrewNeural",
+  "scenes": [
+    {
+      "type": "stat",
+      "kicker": "Enterprise AI coding · 2025",
+      "headline": ["Spend on AI coding", "tools went"],
+      "number": {"from": 0.55, "to": 4, "prefix": "$", "suffix": "B", "decimals": 2, "dropZeros": true, "dur": 3.4},
+      "sub": "from _$0.55B_ — a *7×* jump in one year",
+      "vo": "Enterprise spending on AI coding tools just jumped from five hundred fifty million to four billion dollars in a single year.",
+      "caption": "AI coding spend jumped 7× in a year"
+    },
+    {
+      "type": "statement",
+      "headline": ["But the data", "tells a *different*", "story."],
+      "vo": "But here is what the data actually shows.",
+      "caption": "But what does the data actually show?"
+    },
+    {
+      "type": "statement",
+      "kicker": "Productivity",
+      "headline": ["Speed is real."],
+      "sub": "Yet ~1 in 3 teams~ report productivity ~going down~.",
+      "sub2": ["Faster typing ~≠~", "faster shipping."],
+      "vo": "Speed is real. Yet nearly a third of teams report productivity going down, not up. Faster typing is not faster shipping.",
+      "caption": "Faster typing isn’t faster shipping"
+    },
+    {
+      "type": "bars",
+      "headline": ["The efficiency–", "throughput *gap*"],
+      "bars": [
+        {"label": ["Individual", "speed"], "value": 100, "max": 100, "color": "acc"},
+        {"label": ["Org", "throughput"], "value": 27, "max": 100}
+      ],
+      "vo": "The gains often stall at the individual developer. They rarely reach the whole organisation. That is the efficiency throughput gap.",
+      "caption": "Individual gains rarely reach the org"
+    },
+    {
+      "type": "list",
+      "headline": ["Speed brings", "~risk.~"],
+      "items": ["Vulnerable code", "Leaked secrets", "Hallucinated packages"],
+      "vo": "And speed brings risk. AI generated code raises vulnerability rates, leaks secrets, and even invents packages that attackers can exploit.",
+      "caption": "More vulnerabilities, secrets & bad packages"
+    },
+    {
+      "type": "bignum",
+      "number": {"from": 0, "to": 6, "suffix": "%", "decimals": 0, "dur": 1.8},
+      "headline": ["get it right."],
+      "sub": "They measure *throughput, security & value* —\nnot keystrokes.",
+      "vo": "Only six percent of organisations get this right. They do not count keystrokes. They measure throughput, security, and value actually delivered.",
+      "caption": "Only 6% measure what truly matters"
+    },
+    {
+      "type": "outro",
+      "headline": ["Measure what", "*ships*,", "not what’s typed."],
+      "byline": "— Yasir · independent analyst",
+      "vo": "Measure what ships, not what is typed.",
+      "caption": "Measure what ships — not what’s typed"
+    }
+  ]
+}

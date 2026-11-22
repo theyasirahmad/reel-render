@@ -1,0 +1,8 @@
+_work/
+_payload.json
+render/data.js
+*.mp4
+_chk_*.jpg
+__pycache__/
+*.pyc
+.DS_Store
