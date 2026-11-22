@@ -3,50 +3,30 @@
   "accent": "#3F6E95",
   "accent2": "#C58A3B",
   "voice": "en-US-AndrewNeural",
-  "meta": { "title": "How AI Personalization Lifts E-commerce" },
+  "meta": { "title": "White House Fires Cyber Chief After Tech Outages" },
   "scenes": [
     {
-      "type": "stat",
-      "kicker": "Global e-commerce · 2024",
-      "number": { "from": 3.6, "to": 4.1, "prefix": "$", "suffix": "T", "decimals": 1 },
-      "serif": ["and still *climbing.*"],
-      "vo": "Global e-commerce hit four point one trillion dollars in twenty twenty four, up from three point six trillion the year before.",
-      "caption": "E-commerce crossed four trillion"
+      "type": "word",
+      "kicker": "Breaking",
+      "hero": "FIRED.",
+      "vo": "The White House just fired its national cyber director."
     },
     {
-      "type": "stat",
-      "kicker": "The shift",
-      "number": { "from": 0, "to": 60, "suffix": "%", "decimals": 0, "small": true },
-      "serif": ["of it happens *on a phone.*"],
-      "sub": "Mobile is the storefront now.",
-      "vo": "Sixty percent of all online sales now happen on a phone, so the experience has to work on a small screen.",
-      "caption": "Mobile is the majority now"
+      "type": "number",
+      "number": { "from": 0, "to": 4, "decimals": 0 },
+      "label": "major systems down in *5 days*",
+      "vo": "Four major US systems went down in just five days."
     },
     {
-      "type": "bars",
-      "kicker": "What AI personalization moves",
-      "headline": "The *numbers*",
-      "bars": [
-        { "label": "Conversion", "value": 20, "suffix": "%", "color": "accent" },
-        { "label": "Order value", "value": 11, "suffix": "%", "color": "amber" },
-        { "label": "Carts lost", "value": 70, "suffix": "%", "color": "grey" }
-      ],
-      "vo": "Personalization lifts conversion by about twenty percent and order value by eleven, yet seventy percent of carts are still abandoned.",
-      "caption": "What AI personalization moves"
+      "type": "phrase",
+      "lines": ["Not a hack.", "A *coordination* gap."],
+      "rule": true,
+      "vo": "Intelligence ruled out a foreign attack. It was a coordination failure."
     },
     {
-      "type": "statement",
-      "kicker": "The insight",
-      "serif": ["Personalization", "is the *lever.*"],
-      "sub": "Small, measured, compounding.",
-      "vo": "The real lever is personalization. Small, measured changes that compound over time.",
-      "caption": "Personalization is the real lever"
-    },
-    {
-      "type": "outro",
-      "serif": ["Start where the", "*carts are lost.*"],
-      "vo": "Start where the carts are lost, then measure every step against a holdout before you scale.",
-      "caption": "Start where the carts are lost"
+      "type": "cta",
+      "lines": ["Full breakdown", "in the *newsletter.*"],
+      "vo": "Read the full story in the AI Newsletter."
     }
   ]
 }
