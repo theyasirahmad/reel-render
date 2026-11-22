@@ -35,29 +35,49 @@ def load_payload(args):
 
 
 # ----------------------------------------------------------------------------- voice
+def _clean_voice_id(v):
+    """Tolerate a pasted name/URL/extra chars; return a bare voice id."""
+    v = (v or "").strip().strip('"').strip("'").strip()
+    if v.lower().startswith("http"):
+        v = v.rstrip("/").split("/")[-1]
+    if "=" in v:
+        v = v.split("=")[-1]
+    return v.strip()
+
+
 def synth_elevenlabs(text, out_mp3):
     key = os.environ.get("ELEVENLABS_API_KEY", "").strip()
     if not key:
+        log("ElevenLabs: no ELEVENLABS_API_KEY set — using fallback voice")
         return False
-    voice = os.environ.get("ELEVENLABS_VOICE_ID", "").strip() or "pNInz6obpgDQGcFmaJgB"
-    model = os.environ.get("ELEVENLABS_MODEL", "eleven_multilingual_v2").strip()
-    try:
-        import requests
-        r = requests.post(
-            "https://api.elevenlabs.io/v1/text-to-speech/" + voice,
-            headers={"xi-api-key": key, "accept": "audio/mpeg", "content-type": "application/json"},
-            json={"text": text, "model_id": model,
-                  "voice_settings": {"stability": 0.42, "similarity_boost": 0.8,
-                                     "style": 0.0, "use_speaker_boost": True}},
-            timeout=120)
-        if r.status_code == 200 and len(r.content) > 2000:
-            with open(out_mp3, "wb") as f:
-                f.write(r.content)
-            log("voice: ElevenLabs", voice, model)
-            return True
-        log("ElevenLabs failed:", r.status_code, r.text[:160])
-    except Exception as e:
-        log("ElevenLabs error:", repr(e)[:160])
+    import requests
+    voice = _clean_voice_id(os.environ.get("ELEVENLABS_VOICE_ID", ""))
+    model = (os.environ.get("ELEVENLABS_MODEL") or "eleven_multilingual_v2").strip() or "eleven_multilingual_v2"
+    DEFAULT = "pNInz6obpgDQGcFmaJgB"  # Adam (premade): proves the key if the chosen voice id is bad
+    candidates = []
+    if voice:
+        candidates.append((voice, "your voice"))
+    if voice != DEFAULT:
+        candidates.append((DEFAULT, "default premade — fix ELEVENLABS_VOICE_ID"))
+    for vid, tag in candidates:
+        try:
+            r = requests.post(
+                "https://api.elevenlabs.io/v1/text-to-speech/" + vid,
+                headers={"xi-api-key": key, "accept": "audio/mpeg", "content-type": "application/json"},
+                json={"text": text, "model_id": model,
+                      "voice_settings": {"stability": 0.42, "similarity_boost": 0.8,
+                                         "style": 0.0, "use_speaker_boost": True}},
+                timeout=120)
+            if r.status_code == 200 and len(r.content) > 2000:
+                with open(out_mp3, "wb") as f:
+                    f.write(r.content)
+                log("voice: ElevenLabs", vid, model, "(" + tag + ")")
+                return True
+            prev = (vid[:4] + ".." + vid[-3:]) if len(vid) > 9 else vid
+            log("ElevenLabs rejected (%s): HTTP %s %s [voice_id len=%d preview=%s model=%s]"
+                % (tag, r.status_code, r.text[:150], len(vid), prev, model))
+        except Exception as e:
+            log("ElevenLabs error:", repr(e)[:160])
     return False
 
 
