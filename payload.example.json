@@ -1,32 +1,15 @@
 {
   "brand": "AI Newsletter",
-  "accent": "#3F6E95",
+  "theme": "dark",
+  "accent": "#CC6A52",
   "accent2": "#C58A3B",
   "voice": "en-US-AndrewNeural",
-  "meta": { "title": "White House Fires Cyber Chief After Tech Outages" },
+  "meta": { "title": "The Fragile State of US Cyber Infrastructure" },
   "scenes": [
-    {
-      "type": "word",
-      "kicker": "Breaking",
-      "hero": "FIRED.",
-      "vo": "The White House just fired its national cyber director."
-    },
-    {
-      "type": "number",
-      "number": { "from": 0, "to": 4, "decimals": 0 },
-      "label": "major systems down in *5 days*",
-      "vo": "Four major US systems went down in just five days."
-    },
-    {
-      "type": "phrase",
-      "lines": ["Not a hack.", "A *coordination* gap."],
-      "rule": true,
-      "vo": "Intelligence ruled out a foreign attack. It was a coordination failure."
-    },
-    {
-      "type": "cta",
-      "lines": ["Full breakdown", "in the *newsletter.*"],
-      "vo": "Read the full story in the AI Newsletter."
-    }
+    { "layout": "hook", "kicker": "Analysis", "hero": "FRAGILE.", "vo": "America's cyber defense is more fragile than it looks." },
+    { "layout": "bignum", "number": { "from": 0, "to": 3, "decimals": 0 }, "label": "top posts *vacant* at once", "vo": "Three top cyber posts sat vacant at the very same time." },
+    { "layout": "stack", "words": ["Coordinate.", "Not", "Command."], "accentIndex": 2, "vo": "The office can coordinate, but it cannot command." },
+    { "layout": "quote", "lines": ["The gap is the", "*opportunity.*"], "source": "the analysis", "vo": "And that gap is exactly where the opportunity hides." },
+    { "layout": "cta", "lines": ["The full read", "is *waiting.*"], "vo": "The full breakdown is waiting for you." }
   ]
 }
